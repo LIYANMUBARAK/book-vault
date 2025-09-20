@@ -56,16 +56,13 @@ class BookPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Book $book): bool
-    {
-        //
-    }
+   public function restore(User $user, Book $book): bool
+{
+    return false; // not using soft deletes
+}
 
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, Book $book): bool
-    {
-        //
-    }
+public function forceDelete(User $user, Book $book): bool
+{
+    return false; // not allowing permanent delete
+}
 }
