@@ -14,6 +14,11 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
+    <nav class="bg-gray-800 text-white p-4 flex space-x-4">
+    <a href="{{ route('books.index') }}" class="hover:underline">Books</a>
+    <a href="{{ route('categories.index') }}" class="hover:underline">Categories</a>
+    <a href="{{ route('borrow.index') }}" class="hover:underline">Borrow Records</a>
+</nav>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
             @include('layouts.navigation')

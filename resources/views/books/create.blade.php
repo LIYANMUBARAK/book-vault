@@ -25,15 +25,18 @@
             </select>
         </div>
 
-        <div class="mb-4">
-            <label class="block">Published Year</label>
-            <input type="number" name="published_year" class="border p-2 w-full" required>
-        </div>
+      <div class="mb-2">
+    <label class="block mb-1">Published Year</label>
+    <input type="number" name="published_year" value="{{ old('published_year') }}" class="border p-2 w-full">
+    @error('published_year')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+</div>
 
-        <div class="mb-4">
-            <label class="block">Stock Count</label>
-            <input type="number" name="stock_count" class="border p-2 w-full" required>
-        </div>
+<div class="mb-2">
+    <label class="block mb-1">Stock Count</label>
+    <input type="number" name="stock_count" value="{{ old('stock_count', 0) }}" class="border p-2 w-full">
+    @error('stock_count')<span class="text-red-500 text-sm">{{ $message }}</span>@enderror
+</div>
+
 
         <button class="bg-blue-500 text-white px-4 py-2 rounded">Save</button>
     </form>

@@ -11,10 +11,15 @@ class BookController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-   {
+public function index()
+{
     $this->authorize('viewAny', Book::class);
-    $books = Book::with('category')->get();
+
+    // Load category and borrowed count
+    $books = Book::with('category')
+                 ->withCount('borrow_records') // counts borrowed books
+                 ->get();
+
     return view('books.index', compact('books'));
 }
 

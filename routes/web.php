@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\BorrowController;
+
 
 
 /*
@@ -32,6 +34,10 @@ Route::middleware('auth')->group(function () {
     // Admin-only
     Route::resource('categories', CategoryController::class);
     Route::resource('books', BookController::class);
+
+     Route::get('/borrow', [BorrowController::class, 'index'])->name('borrow.index');
+        Route::post('/borrow/{book}', [BorrowController::class, 'store'])->name('borrow.store');
+    Route::put('/return/{borrow}', [BorrowController::class, 'return'])->name('borrow.return');
 });
 
 require __DIR__.'/auth.php';
