@@ -13,5 +13,11 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         //
+        \App\Models\Category::insert([
+    ['name' => 'Fiction'],
+    ['name' => 'Science'],
+    ['name' => 'History'],
+]);
+
     }
 }
