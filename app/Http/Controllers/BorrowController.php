@@ -9,6 +9,29 @@ use Illuminate\Support\Facades\Auth;
 
 class BorrowController extends Controller
 {
+
+ public function index()
+{
+    if (Auth::user()->role === 'admin') {
+        // Admin sees all borrow records
+        $records = BorrowRecord::with(['book', 'user'])
+                    ->orderBy('borrowed_at', 'desc')
+                    ->paginate(10); // change 10 to how many per page
+    } else {
+        // Member sees only their own borrow records
+        $records = BorrowRecord::with('book')
+                    ->where('user_id', Auth::id())
+                    ->orderBy('borrowed_at', 'desc')
+                    ->paginate(10);
+    }
+
+    return view('borrow.index', compact('records'));
+}
+
+
+
+
+
     // Borrow a book
     public function store($bookId)
     {
@@ -27,6 +50,15 @@ class BorrowController extends Controller
         if ($existing) {
             return back()->with('error', 'You already borrowed this book.');
         }
+
+        // ✅ Check borrowing limit
+    $activeBorrowCount = BorrowRecord::where('user_id', Auth::id())
+        ->whereNull('returned_at')
+        ->count();
+
+    if ($activeBorrowCount >= 3) { // limit = 3
+        return back()->with('error', 'You have reached your borrowing limit.');
+    }
 
         BorrowRecord::create([
             'user_id'     => Auth::id(),
@@ -56,6 +88,8 @@ class BorrowController extends Controller
 
         // ✅ Increase stock
         $borrow->book->increment('stock_count');
+
+
 
         return back()->with('success', 'Book returned successfully.');
     }

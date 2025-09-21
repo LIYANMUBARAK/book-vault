@@ -57,4 +57,28 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+
+    public function adminDashboard()
+{
+    $this->authorize('admin-only');
+
+    $totalBooks = \App\Models\Book::count();
+    $borrowedBooks = \App\Models\BorrowRecord::whereNull('returned_at')->count();
+    $overdueBooks = \App\Models\BorrowRecord::whereNull('returned_at')
+                        ->where('due_date', '<', now())->count();
+
+    return view('dashboard.admin', compact('totalBooks', 'borrowedBooks', 'overdueBooks'));
+}
+
+
+public function memberDashboard()
+{
+    $borrowedBooks = \App\Models\BorrowRecord::where('user_id', Auth::id())
+                        ->whereNull('returned_at')
+                        ->with('book')
+                        ->get();
+
+    return view('dashboard.member', compact('borrowedBooks'));
+}
+
 }

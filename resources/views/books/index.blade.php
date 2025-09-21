@@ -1,12 +1,47 @@
 @extends('layouts.app')
 
 @section('content')
+
+<form method="GET" action="{{ route('books.index') }}" class="mb-4 flex gap-2">
+    <input type="text" name="search" placeholder="Search by title/author" value="{{ request('search') }}" class="border rounded px-2 py-1">
+    
+    <select name="category" class="border rounded px-2 py-1">
+        <option value="">All Categories</option>
+        @foreach($categories as $category)
+            <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
+                {{ $category->name }}
+            </option>
+        @endforeach
+    </select>
+
+    <select name="availability" class="border rounded px-2 py-1">
+        <option value="">All</option>
+        <option value="available" {{ request('availability') == 'available' ? 'selected' : '' }}>In Stock</option>
+        <option value="unavailable" {{ request('availability') == 'unavailable' ? 'selected' : '' }}>Out Of Stock</option>
+    </select>
+
+    <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded">Filter</button>
+</form>
+
+
+
 <div class="container mx-auto p-4">
     <h1 class="text-2xl font-bold mb-4">Books</h1>
 
     @can('create', App\Models\Book::class)
         <a href="{{ route('books.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">Add New Book</a>
     @endcan
+@if(session('error'))
+    <div class="bg-red-200 text-red-800 p-2 mb-4 rounded">
+        {{ session('error') }}
+    </div>
+@endif
+
+@if(session('success'))
+    <div class="bg-green-200 text-green-800 p-2 mb-4 rounded">
+        {{ session('success') }}
+    </div>
+@endif
 
 <table class="min-w-full border">
     <thead>
@@ -110,8 +145,11 @@
 </tbody>
 
 
+
 </table>
 
-
+<div class="mt-4">
+    {{ $books->links() }}
+</div>
 </div>
 @endsection

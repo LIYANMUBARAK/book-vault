@@ -11,22 +11,49 @@ class BookController extends Controller
     /**
      * Display a listing of the resource.
      */
-public function index()
+public function index(Request $request)
 {
     $this->authorize('viewAny', Book::class);
 
-    // Load category and borrowed count
-    $books = Book::with('category')
-                     ->withCount([
-        'borrow_records as borrow_records_count' => function ($query) {
-            $query->whereNull('returned_at'); // ✅ only active borrows
+    $query = Book::with('category')
+                 ->withCount('borrow_records');
+
+    // Search by title or author
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function($q) use ($search) {
+            $q->where('title', 'like', "%{$search}%")
+              ->orWhere('author', 'like', "%{$search}%");
+        });
+    }
+
+    // Filter by category
+    if ($request->filled('category')) {
+        $query->where('category_id', $request->category);
+    }
+
+    // Filter by availability
+    if ($request->filled('availability')) {
+        if ($request->availability === 'available') {
+            $query->where('stock_count', '>', 0);
+        } elseif ($request->availability === 'unavailable') {
+            $query->where('stock_count', '<=', 0);
         }
-    ])
+    }
 
-                 ->get();
+   // Borrowed count for active records
+    $query->withCount(['borrow_records' => function($q) {
+        $q->whereNull('returned_at');
+    }]);
 
-    return view('books.index', compact('books'));
+    // Paginate results (10 per page)
+    $books = $query->paginate(10)->withQueryString();
+
+    $categories = Category::all(); // for filter dropdown
+
+    return view('books.index', compact('books', 'categories'));
 }
+
 
     /**
      * Show the form for creating a new resource.

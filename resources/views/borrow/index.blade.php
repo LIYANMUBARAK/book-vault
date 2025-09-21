@@ -31,7 +31,7 @@
                 </td>
                 <td class="border px-4 py-2">
                     @if(!$record->returned_at && Auth::id() === $record->user_id)
-                        <form action="{{ route('borrow.update', $record->id) }}" method="POST">
+                        <form action="{{ route('borrow.return', $record->id) }}" method="POST">
                             @csrf
                             @method('PUT')
                             <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded">
@@ -44,4 +44,8 @@
         @endforeach
     </tbody>
 </table>
+<div class="mt-4">
+    {{ $records->links() }}
+</div>
+
 @endsection

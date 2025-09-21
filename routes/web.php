@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\BorrowController;
+use App\Http\Controllers\DashboardController;
+
 
 
 
@@ -23,9 +25,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -35,7 +38,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('categories', CategoryController::class);
     Route::resource('books', BookController::class);
 
-    Route::get('/borrow', [BorrowController::class, 'index'])->name('borrow.index');
+    Route::get('/borrow', [BorrowController::class, 'index'])->name('borrow.index')->middleware('auth');;
     Route::post('/borrow/{book}', [BorrowController::class, 'store'])->name('borrow.store');
     Route::put('/return/{borrow}', [BorrowController::class, 'return'])->name('borrow.return');
 Route::put('/borrow/{borrowRecord}/return', [BorrowController::class, 'return'])->name('borrow.return');
