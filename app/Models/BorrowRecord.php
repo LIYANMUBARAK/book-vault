@@ -14,6 +14,7 @@ class BorrowRecord extends Model
         'book_id',
         'borrowed_at',
         'returned_at',
+        'due_date',
     ];
 
     public $timestamps = false;
@@ -22,6 +23,13 @@ class BorrowRecord extends Model
         'borrowed_at',
         'returned_at',
     ];
+
+    protected $casts = [
+    'borrowed_at' => 'datetime',
+    'due_date' => 'datetime',
+    'returned_at' => 'datetime',
+];
+
 
     public function user()
     {

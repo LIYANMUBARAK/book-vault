@@ -35,9 +35,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('categories', CategoryController::class);
     Route::resource('books', BookController::class);
 
-     Route::get('/borrow', [BorrowController::class, 'index'])->name('borrow.index');
-        Route::post('/borrow/{book}', [BorrowController::class, 'store'])->name('borrow.store');
+    Route::get('/borrow', [BorrowController::class, 'index'])->name('borrow.index');
+    Route::post('/borrow/{book}', [BorrowController::class, 'store'])->name('borrow.store');
     Route::put('/return/{borrow}', [BorrowController::class, 'return'])->name('borrow.return');
+Route::put('/borrow/{borrowRecord}/return', [BorrowController::class, 'return'])->name('borrow.return');
+
 });
 
 require __DIR__.'/auth.php';

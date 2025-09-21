@@ -29,10 +29,14 @@ class BorrowController extends Controller
         }
 
         BorrowRecord::create([
-            'user_id' => Auth::id(),
-            'book_id' => $book->id,
+            'user_id'     => Auth::id(),
+            'book_id'     => $book->id,
             'borrowed_at' => now(),
+            'due_date'    => now()->addWeeks(2), // 2-week due date
         ]);
+
+        // ✅ Reduce stock
+        $book->decrement('stock_count');
 
         return back()->with('success', 'Book borrowed successfully.');
     }
@@ -49,6 +53,9 @@ class BorrowController extends Controller
         $borrow->update([
             'returned_at' => now(),
         ]);
+
+        // ✅ Increase stock
+        $borrow->book->increment('stock_count');
 
         return back()->with('success', 'Book returned successfully.');
     }

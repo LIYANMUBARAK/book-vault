@@ -17,7 +17,12 @@ public function index()
 
     // Load category and borrowed count
     $books = Book::with('category')
-                 ->withCount('borrow_records') // counts borrowed books
+                     ->withCount([
+        'borrow_records as borrow_records_count' => function ($query) {
+            $query->whereNull('returned_at'); // ✅ only active borrows
+        }
+    ])
+
                  ->get();
 
     return view('books.index', compact('books'));
