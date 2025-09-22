@@ -13,7 +13,7 @@ class CategoryController extends Controller
   public function index()
 {
     // Use paginate instead of all
-    $categories = Category::paginate(10); // 10 per page
+    $categories = Category::paginate(8); // 10 per page
     return view('categories.index', compact('categories'));
 }
 
