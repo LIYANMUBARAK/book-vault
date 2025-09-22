@@ -31,8 +31,9 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+Route::put('/password', [ProfileController::class, 'updatePassword'])->name('password.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     // Admin-only
     Route::resource('categories', CategoryController::class);
@@ -41,7 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/borrow', [BorrowController::class, 'index'])->name('borrow.index')->middleware('auth');;
     Route::post('/borrow/{book}', [BorrowController::class, 'store'])->name('borrow.store');
     Route::put('/return/{borrow}', [BorrowController::class, 'return'])->name('borrow.return');
-Route::put('/borrow/{borrowRecord}/return', [BorrowController::class, 'return'])->name('borrow.return');
+// Route::put('/borrow/{borrowRecord}/return', [BorrowController::class, 'return'])->name('borrow.return');
 
 });
 

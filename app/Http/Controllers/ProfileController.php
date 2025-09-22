@@ -8,18 +8,42 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Http\Requests\UpdatePasswordRequest;
+
+
+
 
 class ProfileController extends Controller
 {
     /**
      * Display the user's profile form.
      */
-    public function edit(Request $request): View
-    {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
-    }
+   public function edit(Request $request)
+{
+    return view('profile.edit', [
+        'user' => $request->user(), // THIS MUST BE PRESENT
+    ]);
+    
+}
+
+
+
+public function updatePassword(UpdatePasswordRequest $request)
+{
+    // Add some debugging
+    \Log::info('Password update attempt', [
+        'user_id' => $request->user()->id,
+        'has_current_password' => !empty($request->current_password),
+        'has_new_password' => !empty($request->password),
+    ]);
+
+    $user = $request->user();
+    $user->password = Hash::make($request->password);
+    $user->save();
+
+    return redirect()->route('profile.edit')->with('status', 'password-updated');
+}
+
 
     /**
      * Update the user's profile information.
